@@ -14,12 +14,12 @@ public class LoginPage {
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
-        if (!driver.getTitle().contains("Swag Labs")) { // Умовно перевіряємо заголовок сторінки
+        if (!driver.getTitle().contains("Swag Labs")) {
             throw new IllegalStateException("This is not the Login Page. Current page: " + driver.getCurrentUrl());
         }
     }
 
-    public ProductPage login(String username, String password) {
+    public HomePage login(String username, String password) {
         WebElement usernameElement = driver.findElement(usernameField);
         WebElement passwordElement = driver.findElement(passwordField);
         WebElement loginButtonElement = driver.findElement(loginButton);
@@ -28,7 +28,7 @@ public class LoginPage {
         passwordElement.sendKeys(password);
         loginButtonElement.click();
 
-        return new ProductPage(driver);
+        return new HomePage(driver);
     }
 
 //    public boolean isErrorMessageDisplayed() {

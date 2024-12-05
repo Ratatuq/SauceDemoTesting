@@ -7,7 +7,7 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pages.LoginPage;
-import pages.ProductPage;
+import pages.HomePage;
 
 public class LoginTestPOM {
     WebDriver driver;
@@ -24,9 +24,9 @@ public class LoginTestPOM {
     @Test
     public void testLogin() {
         loginPage = new LoginPage(driver);
-        ProductPage productPage = loginPage.login("standard_user", "secret_sauce");
+        HomePage homePage = loginPage.login("standard_user", "secret_sauce");
 
-        boolean areProductsNotDisplayed = productPage.getProductNames().isEmpty();
+        boolean areProductsNotDisplayed = homePage.getProductNames().isEmpty();
         Assert.assertFalse(areProductsNotDisplayed, "Test Failed: No products displayed on the Product Page.");
 
         if (!areProductsNotDisplayed) {

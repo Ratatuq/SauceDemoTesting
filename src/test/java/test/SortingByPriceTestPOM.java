@@ -5,13 +5,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import pages.LoginPage;
-import pages.ProductPage;
+import pages.HomePage;
 
 public class SortingByPriceTestPOM {
 
     private WebDriver driver;
     private LoginPage loginPage;
-    private ProductPage productPage;
+    private HomePage homePage;
 
     @BeforeTest
     public void setup() {
@@ -20,15 +20,15 @@ public class SortingByPriceTestPOM {
         driver.get("https://www.saucedemo.com");
 
         loginPage = new LoginPage(driver);
-        productPage = new ProductPage(driver);
+        homePage = new HomePage(driver);
     }
 
     @Test(priority = 1)
     public void testLogin() {
         loginPage = new LoginPage(driver);
-        ProductPage productPage = loginPage.login("standard_user", "secret_sauce");
+        HomePage homePage = loginPage.login("standard_user", "secret_sauce");
 
-        boolean areProductsNotDisplayed = productPage.getProductNames().isEmpty();
+        boolean areProductsNotDisplayed = homePage.getProductNames().isEmpty();
         Assert.assertFalse(areProductsNotDisplayed, "Test Failed: No products displayed on the Product Page.");
 
         if (!areProductsNotDisplayed) {
@@ -38,9 +38,9 @@ public class SortingByPriceTestPOM {
 
     @Test(priority = 2, dependsOnMethods = "testLogin")
     public void testSortProductsByPrice() {
-        productPage.sortProductsByPrice();
+        homePage.sortProductsByPrice();
 
-        Assert.assertTrue(productPage.arePricesSorted(), "Test Failed: Products are not sorted by price.");
+        Assert.assertTrue(homePage.arePricesSorted(), "Test Failed: Products are not sorted by price.");
         System.out.println("Test Passed: Products are sorted by price.");
     }
 

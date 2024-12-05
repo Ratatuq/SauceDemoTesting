@@ -72,8 +72,8 @@ public class SortingByNameTest {
 
     private void sortProductsByName() {
         WebElement sortDropdown = driver.findElement(By.className("product_sort_container"));
-        sortDropdown.click();  // Відкриваємо список сортування
+        sortDropdown.click();
         WebElement alphabeticallyOption = driver.findElement(By.xpath("//option[@value='az']"));
-        alphabeticallyOption.click();  // Вибираємо сортування від A до Z
+        alphabeticallyOption.click();
     }
 }

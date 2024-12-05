@@ -1,5 +1,6 @@
 package test;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
@@ -7,42 +8,42 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pages.LoginPage;
-import pages.ProductPage;
+import pages.HomePage;
 import pages.CartPage;
+import pages.CheckoutInputPage;
 import pages.CheckoutPage;
-import pages.CheckoutOverviewPage;
-import pages.OrderConfirmationPage;
+import pages.CheckoutConfirmPage;
 
 public class OrderTestPOM {
     WebDriver driver;
 
     LoginPage loginPage;
-    ProductPage productPage;
+    HomePage homePage;
     CartPage cartPage;
+    CheckoutInputPage checkoutInputPage;
     CheckoutPage checkoutPage;
-    CheckoutOverviewPage checkoutOverviewPage;
-    OrderConfirmationPage orderConfirmationPage;
+    CheckoutConfirmPage checkoutConfirmPage;
 
     @BeforeTest
     public void setup() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\chromedriver\\chromedriver-win64\\chromedriver.exe");
+        WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         driver.get("https://www.saucedemo.com");
 
         loginPage = new LoginPage(driver);
-        productPage = new ProductPage(driver);
+        homePage = new HomePage(driver);
         cartPage = new CartPage(driver);
+        checkoutInputPage = new CheckoutInputPage(driver);
         checkoutPage = new CheckoutPage(driver);
-        checkoutOverviewPage = new CheckoutOverviewPage(driver);
-        orderConfirmationPage = new OrderConfirmationPage(driver);
+        checkoutConfirmPage = new CheckoutConfirmPage(driver);
     }
 
     @Test(priority = 1)
     public void testLogin() {
         loginPage = new LoginPage(driver);
-        ProductPage productPage = loginPage.login("standard_user", "secret_sauce");
+        HomePage homePage = loginPage.login("standard_user", "secret_sauce");
 
-        boolean areProductsNotDisplayed = productPage.getProductNames().isEmpty();
+        boolean areProductsNotDisplayed = homePage.getProductNames().isEmpty();
         Assert.assertFalse(areProductsNotDisplayed, "Test Failed: No products displayed on the Product Page.");
 
         if (!areProductsNotDisplayed) {
@@ -52,18 +53,18 @@ public class OrderTestPOM {
 
     @Test(priority = 2, dependsOnMethods = "testLogin")
     public void testOrder() {
-        productPage.addFirstThreeProductsToCart();
-        productPage.goToCart();
+        homePage.addFirstThreeProductsToCart();
+        homePage.goToCart();
 
         Assert.assertEquals(cartPage.getCartItemCount(), 3, "Expected 3 items in the cart.");
         cartPage.clickCheckoutButton();
 
-        checkoutPage.fillCheckoutForm("John", "Doe", "12345");
-        checkoutPage.clickContinueButton();
+        checkoutInputPage.fillCheckoutForm("John", "Doe", "12345");
+        checkoutInputPage.clickContinueButton();
 
-        checkoutOverviewPage.clickFinishButton();
+        checkoutPage.clickFinishButton();
 
-        String confirmationMessage = orderConfirmationPage.getConfirmationMessage();
+        String confirmationMessage = checkoutConfirmPage.getConfirmationMessage();
         Assert.assertEquals(confirmationMessage, "Thank you for your order!", "Order confirmation message not displayed correctly.");
     }
 

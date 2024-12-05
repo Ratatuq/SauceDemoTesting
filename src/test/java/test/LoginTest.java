@@ -26,13 +26,13 @@ public class LoginTest {
         WebElement loginButton = driver.findElement(By.id("login-button"));
 
         username.sendKeys("standard_user");
-        password.sendKeys("secret_sauce"); // Виправлено пароль
+        password.sendKeys("secret_sauce");
         loginButton.click();
 
         boolean isErrorDisplayed = isErrorMessageDisplayed();
         if (isErrorDisplayed) {
             System.out.println("Login failed. Incorrect username or password.");
-            Assert.fail("Login error message displayed."); // Провал тесту, якщо логін не вдався
+            Assert.fail("Login error message displayed.");
         } else {
             System.out.println("Login Success.");
             Assert.assertTrue(driver.getCurrentUrl().contains("inventory.html"), "User is not redirected to inventory page.");

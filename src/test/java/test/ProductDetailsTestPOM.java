@@ -1,5 +1,6 @@
 package test;
 
+import components.PictureProductComponent;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
@@ -7,14 +8,14 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pages.LoginPage;
+import pages.HomePage;
 import pages.ProductPage;
-import pages.ProductDetailsPage;
 
 public class ProductDetailsTestPOM {
     private WebDriver driver;
     private LoginPage loginPage;
+    private HomePage homePage;
     private ProductPage productPage;
-    private ProductDetailsPage productDetailsPage;
 
     @BeforeTest
     public void setup() {
@@ -23,16 +24,16 @@ public class ProductDetailsTestPOM {
         driver.get("https://www.saucedemo.com");
 
         loginPage = new LoginPage(driver);
+        homePage = new HomePage(driver);
         productPage = new ProductPage(driver);
-        productDetailsPage = new ProductDetailsPage(driver);
     }
 
     @Test(priority = 1)
     public void testLogin() {
         loginPage = new LoginPage(driver);
-        ProductPage productPage = loginPage.login("standard_user", "secret_sauce");
+        homePage = loginPage.login("standard_user", "secret_sauce");
 
-        boolean areProductsNotDisplayed = productPage.getProductNames().isEmpty();
+        boolean areProductsNotDisplayed = homePage.getProductNames().isEmpty();
         Assert.assertFalse(areProductsNotDisplayed, "Test Failed: No products displayed on the Product Page.");
 
         if (!areProductsNotDisplayed) {
@@ -42,19 +43,19 @@ public class ProductDetailsTestPOM {
 
     @Test(priority = 2, dependsOnMethods = "testLogin")
     public void testProductDetails() {
-        productPage.clickFirstProduct();
+        homePage.clickFirstProduct();
 
-        String productName = productDetailsPage.getProductName();
-        String productPrice = productDetailsPage.getProductPrice();
-        String productDescription = productDetailsPage.getProductDescription();
+        PictureProductComponent productComponent = productPage.getProductComponent();
+
+        String productName = productComponent.getProductName();
+        String productPrice = productComponent.getProductPrice();
+        String productDescription = productComponent.getProductDescription();
 
         System.out.println("Product Name: " + productName);
         System.out.println("Product Price: " + productPrice);
         System.out.println("Product Description: " + productDescription);
 
-        Assert.assertTrue(productDetailsPage.isProductNameDisplayed(), "Product Name is not displayed.");
-        Assert.assertTrue(productDetailsPage.isProductPriceDisplayed(), "Product Price is not displayed.");
-        Assert.assertTrue(productDetailsPage.isProductDescriptionDisplayed(), "Product Description is not displayed.");
+        Assert.assertTrue(productComponent.isProductDisplayed(), "Product details are not fully displayed.");
     }
 
     @AfterTest
