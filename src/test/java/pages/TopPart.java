@@ -2,32 +2,40 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 public abstract class TopPart {
     protected WebDriver driver;
 
-    private By hamburgerButton = By.id("react-burger-menu-btn");
-    private By siteTitle = By.className("app_logo");
-    private By cartButton = By.className("shopping_cart_link");
+    @FindBy(id = "react-burger-menu-btn")
+    private WebElement hamburgerButton;
+
+    @FindBy(className = "app_logo")
+    private WebElement siteTitle;
+
+    @FindBy(className = "shopping_cart_link")
+    private WebElement cartButton;
 
     public TopPart(WebDriver driver) {
         this.driver = driver;
+        PageFactory.initElements(driver, this);
     }
 
     public void clickCartButton() {
-        driver.findElement(cartButton).click();
+        cartButton.click();
     }
 
     public void clickHamburgerButton() {
-        driver.findElement(hamburgerButton).click();
+        hamburgerButton.click();
     }
 
     public String getSiteTitle() {
-        return driver.findElement(siteTitle).getText();
+        return siteTitle.getText();
     }
 
-
     public boolean isCartButtonDisplayed() {
-        return driver.findElement(cartButton).isDisplayed();
+        return cartButton.isDisplayed();
     }
 }

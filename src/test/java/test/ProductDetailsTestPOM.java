@@ -1,6 +1,7 @@
 package test;
 
 import components.PictureProductComponent;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
@@ -19,7 +20,7 @@ public class ProductDetailsTestPOM {
 
     @BeforeTest
     public void setup() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\chromedriver\\chromedriver-win64\\chromedriver.exe");
+        WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         driver.get("https://www.saucedemo.com");
 

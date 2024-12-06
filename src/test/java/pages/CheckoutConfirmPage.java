@@ -1,16 +1,21 @@
 package pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 public class CheckoutConfirmPage extends TopPart {
-    private By confirmationMessage = By.className("complete-header");
+
+    @FindBy(className = "complete-header")
+    private WebElement confirmationMessage;
 
     public CheckoutConfirmPage(WebDriver driver) {
         super(driver);
+        PageFactory.initElements(driver, this);
     }
 
     public String getConfirmationMessage() {
-        return driver.findElement(confirmationMessage).getText();
+        return confirmationMessage.getText();
     }
 }

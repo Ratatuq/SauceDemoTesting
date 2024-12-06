@@ -3,23 +3,30 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 
 public class HomePage extends TopPart {
-    private By addToCartButtonLocator = By.className("btn_inventory");
-    private By firstProduct = By.xpath("//*[@id=\"item_4_img_link\"]");
+
+    @FindBy(className = "btn_inventory")
+    private List<WebElement> addToCartButtonList;
+
+    @FindBy(xpath = "//*[@id=\"item_4_img_link\"]")
+    private WebElement firstProduct;
+
     private ProductSorter productSorter;
 
     public HomePage(WebDriver driver) {
         super(driver);
         productSorter = new ProductSorter(driver);
+        PageFactory.initElements(driver, this);
     }
 
     public void addFirstThreeProductsToCart() {
-        List<WebElement> addToCartButtonsList = driver.findElements(addToCartButtonLocator);
         for (int i = 0; i < 3; i++) {
-            addToCartButtonsList.get(i).click();
+            addToCartButtonList.get(i).click();
         }
     }
 
@@ -28,8 +35,7 @@ public class HomePage extends TopPart {
     }
 
     public void clickFirstProduct() {
-        WebElement firstProductElement = driver.findElement(firstProduct);
-        firstProductElement.click();
+        firstProduct.click();
     }
 
     public void sortProductsAlphabetically() {

@@ -1,49 +1,49 @@
 package pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 public class HamburgerMenuPage {
     private WebDriver driver;
 
-    private By allItemsButton = By.id("inventory_sidebar_link");
-    private By aboutButton = By.id("about_sidebar_link");
-    private By logoutButton = By.id("logout_sidebar_link");
-    private By resetAppStateButton = By.id("reset_sidebar_link");
+    @FindBy(id = "inventory_sidebar_link")
+    private WebElement allItemsButton;
 
-    private By menuPanel = By.className("bm-menu");
+    @FindBy(id = "about_sidebar_link")
+    private WebElement aboutButton;
 
-    private By menuWrapper = By.className("bm-menu-wrap");
+    @FindBy(id = "logout_sidebar_link")
+    private WebElement logoutButton;
+
+    @FindBy(id = "reset_sidebar_link")
+    private WebElement resetAppStateButton;
+
+    @FindBy(className = "bm-menu")
+    private WebElement menuPanel;
+
+    @FindBy(className = "bm-menu-wrap")
+    private WebElement menuWrapper;
 
     public HamburgerMenuPage(WebDriver driver) {
         this.driver = driver;
-    }
-
-    public boolean isMenuOpen() {
-        try {
-            WebElement menuWrapperElement = driver.findElement(menuWrapper);
-            String ariaHiddenValue = menuWrapperElement.getAttribute("aria-hidden");
-
-            return ariaHiddenValue != null && ariaHiddenValue.equals("false");
-        } catch (Exception e) {
-            return false;
-        }
+        PageFactory.initElements(driver, this);
     }
 
     public void clickAllItemsButton() {
-        driver.findElement(allItemsButton).click();
+        allItemsButton.click();
     }
 
     public void clickAboutButton() {
-        driver.findElement(aboutButton).click();
+        aboutButton.click();
     }
 
     public void clickLogoutButton() {
-        driver.findElement(logoutButton).click();
+        logoutButton.click();
     }
 
     public void clickResetAppStateButton() {
-        driver.findElement(resetAppStateButton).click();
+        resetAppStateButton.click();
     }
 }

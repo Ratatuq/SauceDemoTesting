@@ -12,7 +12,11 @@ public abstract class ProductComponent {
     protected By productPriceLocator;
     protected By actionButtonLocator;
 
-    public ProductComponent(WebDriver driver, By productNameLocator, By productDescriptionLocator, By productPriceLocator, By actionButtonLocator) {
+    public ProductComponent(WebDriver driver,
+                            By productNameLocator,
+                            By productDescriptionLocator,
+                            By productPriceLocator,
+                            By actionButtonLocator) {
         this.driver = driver;
         this.productNameLocator = productNameLocator;
         this.productDescriptionLocator = productDescriptionLocator;
