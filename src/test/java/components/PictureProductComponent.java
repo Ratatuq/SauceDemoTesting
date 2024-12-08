@@ -15,12 +15,4 @@ public class PictureProductComponent extends ProductComponent {
         super(driver, productNameLocator, productDescriptionLocator, productPriceLocator, actionButtonLocator);
         this.productImageLocator = productImageLocator;
     }
-
-    public boolean isProductImageDisplayed() {
-        return driver.findElement(productImageLocator).isDisplayed();
-    }
-
-    public String getProductImageSrc() {
-        return driver.findElement(productImageLocator).getAttribute("src");
-    }
 }

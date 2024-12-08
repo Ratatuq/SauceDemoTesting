@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-public class OrderTest {
+public class InputCheckoutTest {
 
     WebDriver driver;
 
@@ -38,47 +38,56 @@ public class OrderTest {
     }
 
     @Test(priority = 2, dependsOnMethods = "testLogin")
-    public void testAddTwoItemsToCart() {
+    public void testAddToCartAndProceedToCheckout() {
         List<WebElement> addToCartButtons = driver.findElements(By.className("btn_inventory"));
         addToCartButtons.get(0).click();
-        addToCartButtons.get(1).click();
 
         WebElement cartButton = driver.findElement(By.className("shopping_cart_link"));
         cartButton.click();
-        List<WebElement> cartItems = driver.findElements(By.className("cart_item"));
-        int cartItemCount = cartItems.size();
 
-        Assert.assertEquals(cartItemCount, 2, "Expected 2 items in the cart.");
+        List<WebElement> cartItems = driver.findElements(By.className("cart_item"));
+        Assert.assertEquals(cartItems.size(), 1, "Expected 1 item in the cart.");
 
         WebElement checkoutButton = driver.findElement(By.className("checkout_button"));
         checkoutButton.click();
+    }
 
+    @Test(priority = 3, dependsOnMethods = "testAddToCartAndProceedToCheckout")
+    public void testCheckoutWithoutFillingFields() {
+        WebElement continueButton = driver.findElement(By.className("btn_primary"));
+
+        continueButton.click();
+
+        WebElement errorMessage = driver.findElement(By.cssSelector("[data-test='error']"));
+        Assert.assertTrue(errorMessage.isDisplayed(), "Error message not displayed.");
+        Assert.assertEquals(errorMessage.getText(), "Error: First Name is required", "Incorrect error message displayed for First Name.");
+    }
+
+    @Test(priority = 4, dependsOnMethods = "testCheckoutWithoutFillingFields")
+    public void testCheckoutWithFirstNameOnly() {
         WebElement firstNameInput = driver.findElement(By.id("first-name"));
-        WebElement lastNameInput = driver.findElement(By.id("last-name"));
-        WebElement postalCodeInput = driver.findElement(By.id("postal-code"));
         firstNameInput.sendKeys("John");
-        lastNameInput.sendKeys("Doe");
-        postalCodeInput.sendKeys("12345");
 
         WebElement continueButton = driver.findElement(By.className("btn_primary"));
         continueButton.click();
 
-        List<WebElement> checkoutItems = driver.findElements(By.className("cart_item"));
-        int checkoutItemCount = checkoutItems.size(); // Кількість товарів на сторінці Checkout Overview
+        WebElement errorMessage = driver.findElement(By.cssSelector("[data-test='error']"));
+        Assert.assertTrue(errorMessage.isDisplayed(), "Error message not displayed for Last Name.");
+        Assert.assertEquals(errorMessage.getText(), "Error: Last Name is required", "Incorrect error message displayed for Last Name.");
+    }
 
-        Assert.assertEquals(checkoutItemCount, cartItemCount, "Expected 2 items on the checkout overview page.");
+    @Test(priority = 5, dependsOnMethods = "testCheckoutWithFirstNameOnly")
+    public void testCheckoutWithFirstAndLastNameOnly() {
+        WebElement firstNameInput = driver.findElement(By.id("first-name"));
+        WebElement lastNameInput = driver.findElement(By.id("last-name"));
+        lastNameInput.sendKeys("Doe");
 
-        WebElement finishButton = driver.findElement(By.className("btn_action"));
-        finishButton.click();
+        WebElement continueButton = driver.findElement(By.className("btn_primary"));
+        continueButton.click();
 
-        WebElement confirmationMessage = driver.findElement(By.className("complete-header"));
-        Assert.assertEquals(confirmationMessage.getText(), "Thank you for your order!", "Order confirmation message not displayed correctly.");
-
-        WebElement backHomeButton = driver.findElement(By.className("btn_primary"));
-        backHomeButton.click();
-
-        String currentUrl = driver.getCurrentUrl();
-        Assert.assertEquals(currentUrl, "https://www.saucedemo.com/inventory.html", "URL after clicking 'Back Home' is incorrect.");
+        WebElement errorMessage = driver.findElement(By.cssSelector("[data-test='error']"));
+        Assert.assertTrue(errorMessage.isDisplayed(), "Error message not displayed for Postal Code.");
+        Assert.assertEquals(errorMessage.getText(), "Error: Postal Code is required", "Incorrect error message displayed for Postal Code.");
     }
 
     @AfterTest

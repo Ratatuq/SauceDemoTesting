@@ -23,19 +23,13 @@ public abstract class TopPart {
         PageFactory.initElements(driver, this);
     }
 
-    public void clickCartButton() {
+    public CartPage clickCartButton() {
         cartButton.click();
+        return new CartPage(driver);
     }
 
-    public void clickHamburgerButton() {
+    public HamburgerMenuPage clickHamburgerButton() {
         hamburgerButton.click();
-    }
-
-    public String getSiteTitle() {
-        return siteTitle.getText();
-    }
-
-    public boolean isCartButtonDisplayed() {
-        return cartButton.isDisplayed();
+        return new HamburgerMenuPage(driver);
     }
 }

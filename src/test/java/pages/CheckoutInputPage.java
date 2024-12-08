@@ -19,6 +19,9 @@ public class CheckoutInputPage extends TopPart {
     @FindBy(className = "btn_primary")
     private WebElement continueButton;
 
+    @FindBy(css = "[data-test='error']")
+    private WebElement errorMessage;
+
     public CheckoutInputPage(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
@@ -30,7 +33,12 @@ public class CheckoutInputPage extends TopPart {
         zipCodeField.sendKeys(zipCode);
     }
 
-    public void clickContinueButton() {
+    public CheckoutPage clickContinueButton() {
         continueButton.click();
+        return new CheckoutPage(driver);
+    }
+
+    public String getErrorMessage() {
+        return errorMessage.getText();
     }
 }

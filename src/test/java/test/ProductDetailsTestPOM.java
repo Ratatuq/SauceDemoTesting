@@ -1,68 +1,25 @@
 package test;
 
 import components.PictureProductComponent;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import pages.LoginPage;
-import pages.HomePage;
-import pages.ProductPage;
+import pages.*;
 
-public class ProductDetailsTestPOM {
-    private WebDriver driver;
-    private LoginPage loginPage;
-    private HomePage homePage;
-    private ProductPage productPage;
+public class ProductDetailsTestPOM extends TestRunnerFirst {
 
-    @BeforeTest
-    public void setup() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.get("https://www.saucedemo.com");
-
-        loginPage = new LoginPage(driver);
-        homePage = new HomePage(driver);
-        productPage = new ProductPage(driver);
-    }
-
-    @Test(priority = 1)
+    @Test
     public void testLogin() {
-        loginPage = new LoginPage(driver);
-        homePage = loginPage.login("standard_user", "secret_sauce");
-
-        boolean areProductsNotDisplayed = homePage.getProductNames().isEmpty();
-        Assert.assertFalse(areProductsNotDisplayed, "Test Failed: No products displayed on the Product Page.");
-
-        if (!areProductsNotDisplayed) {
-            System.out.println("Test Passed: Products are displayed on the Product Page.");
-        }
-    }
-
-    @Test(priority = 2, dependsOnMethods = "testLogin")
-    public void testProductDetails() {
-        homePage.clickFirstProduct();
-
+        LoginPage loginPage = loadApplication();
+        HomePage homePage = loginPage.login("standard_user", "secret_sauce");
+        Assert.assertNotNull(homePage, "Test failed: Wrong username or password.");
+        ProductPage productPage = homePage.clickFirstProduct();
         PictureProductComponent productComponent = productPage.getProductComponent();
-
         String productName = productComponent.getProductName();
         String productPrice = productComponent.getProductPrice();
         String productDescription = productComponent.getProductDescription();
-
         System.out.println("Product Name: " + productName);
         System.out.println("Product Price: " + productPrice);
         System.out.println("Product Description: " + productDescription);
-
         Assert.assertTrue(productComponent.isProductDisplayed(), "Product details are not fully displayed.");
-    }
-
-    @AfterTest
-    public void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
     }
 }

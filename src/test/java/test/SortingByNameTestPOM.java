@@ -1,55 +1,24 @@
 package test;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
-import org.testng.annotations.*;
-import pages.LoginPage;
-import pages.HomePage;
+import org.testng.annotations.Test;
+import pages.*;
 
-public class SortingByNameTestPOM {
-    private WebDriver driver;
-    private LoginPage loginPage;
-    private HomePage homePage;
+public class SortingByNameTestPOM extends TestRunnerFirst {
 
-    @BeforeTest
-    public void setup() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.get("https://www.saucedemo.com");
-
-        loginPage = new LoginPage(driver);
-        homePage = new HomePage(driver);
-    }
-
-    @Test(priority = 1)
+    @Test
     public void testLogin() {
-        loginPage = new LoginPage(driver);
+        LoginPage loginPage = loadApplication();
         HomePage homePage = loginPage.login("standard_user", "secret_sauce");
-
-        boolean areProductsNotDisplayed = homePage.getProductNames().isEmpty();
-        Assert.assertFalse(areProductsNotDisplayed, "Test Failed: No products displayed on the Product Page.");
-
-        if (!areProductsNotDisplayed) {
-            System.out.println("Test Passed: Products are displayed on the Product Page.");
-        }
-    }
-
-    @Test(priority = 2, dependsOnMethods = "testLogin")
-    public void testSortProductsAlphabetically() {
-        homePage.sortProductsAlphabetically();
-
-        boolean isSortedAlphabetically = homePage.isSortedAlphabetically();
-
+        Assert.assertNotNull(homePage, "Test failed: Wrong username or password.");
+        homePage.sortProductsAlphabeticallyAZ();
+        boolean isSortedAlphabetically = homePage.isSortedAlphabeticallyAZ();
         Assert.assertTrue(isSortedAlphabetically, "Test Failed: Products are not sorted alphabetically.");
-        System.out.println("Test Passed: Products are sorted alphabetically.");
+        System.out.println("Test Passed: Products are sorted alphabetically from A to Z.");
+        homePage.sortProductsAlphabeticallyZA();
+        isSortedAlphabetically = homePage.isSortedAlphabeticallyZA();
+        Assert.assertTrue(isSortedAlphabetically, "Test Failed: Products are not sorted alphabetically.");
+        System.out.println("Test Passed: Products are sorted alphabetically from Z to A.");
     }
 
-    @AfterTest
-    public void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
 }

@@ -1,5 +1,6 @@
 package pages;
 
+import components.ProductSorter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,7 +12,7 @@ import java.util.List;
 public class HomePage extends TopPart {
 
     @FindBy(className = "btn_inventory")
-    private List<WebElement> addToCartButtonList;
+    private List<WebElement> addToCartButtons;
 
     @FindBy(xpath = "//*[@id=\"item_4_img_link\"]")
     private WebElement firstProduct;
@@ -24,9 +25,10 @@ public class HomePage extends TopPart {
         PageFactory.initElements(driver, this);
     }
 
-    public void addFirstThreeProductsToCart() {
-        for (int i = 0; i < 3; i++) {
-            addToCartButtonList.get(i).click();
+
+    public void addItemsToCart(int numberOfItems) {
+        for (int i = 0; i < numberOfItems; i++) {
+            addToCartButtons.get(i).click();
         }
     }
 
@@ -34,27 +36,53 @@ public class HomePage extends TopPart {
         clickCartButton();
     }
 
-    public void clickFirstProduct() {
+    public ProductPage clickFirstProduct() {
         firstProduct.click();
+        return new ProductPage(driver);
     }
 
-    public void sortProductsAlphabetically() {
-        productSorter.sortAlphabetically();
+    public void sortProductsAlphabeticallyAZ() {
+        productSorter.sortAlphabeticallyAZ();
+    }
+
+    public void sortProductsAlphabeticallyZA() {
+        productSorter.sortAlphabeticallyZA();
     }
 
     public List<WebElement> getProductNames() {
         return driver.findElements(By.className("inventory_item_name"));
     }
 
-    public boolean isSortedAlphabetically() {
-        return productSorter.isSortedAlphabetically();
+    public boolean isSortedAlphabeticallyAZ() {
+        return productSorter.areProductsSortedAlphabeticallyAZ();
     }
 
-    public void sortProductsByPrice() {
+    public boolean isSortedAlphabeticallyZA() {
+        return productSorter.areProductsSortedAlphabeticallyZA();
+    }
+
+    public void sortProductsByLowToHighPrice() {
         productSorter.sortByPriceLowToHigh();
     }
 
-    public boolean arePricesSorted() {
+    public void sortProductsByHighToLowPrice() {
+        productSorter.sortByPriceHighToLow();
+    }
+
+    public boolean arePricesSortedLowToHighPrice() {
         return productSorter.arePricesSortedLowToHigh();
+    }
+
+    public boolean arePricesSortedHighToLowPrice() {
+        return productSorter.arePricesSortedHighToLow();
+    }
+
+    public boolean areAtLeastTwoProductsForPriceComparison() {
+        List<WebElement> products = getProductNames();
+        return products.size() >= 2;
+    }
+
+    public String getCurrentUrl() {
+        return driver.getCurrentUrl();
     }
 }

@@ -1,5 +1,6 @@
 package pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -17,6 +18,9 @@ public class LoginPage {
     @FindBy(id = "login-button")
     private WebElement loginButton;
 
+    @FindBy(css = "[data-test='error']")
+    private WebElement errorMessage;
+
     public LoginPage(WebDriver driver) {
         this.driver = driver;
         if (!driver.getTitle().contains("Swag Labs")) {
@@ -29,6 +33,23 @@ public class LoginPage {
         usernameField.sendKeys(username);
         passwordField.sendKeys(password);
         loginButton.click();
+
+        if (isErrorMessageDisplayed()) {
+            System.out.println("Login failed. Incorrect username or password.");
+            return null;
+        }
         return new HomePage(driver);
+    }
+
+    public boolean isErrorMessageDisplayed() {
+        try {
+            return errorMessage.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String getCurrentUrl() {
+        return driver.getCurrentUrl();
     }
 }

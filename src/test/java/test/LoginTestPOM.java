@@ -1,45 +1,15 @@
 package test;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import pages.LoginPage;
-import pages.HomePage;
+import pages.*;
 
-public class LoginTestPOM {
-    WebDriver driver;
-    LoginPage loginPage;
-
-    @BeforeTest
-    public void setup() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.get("https://www.saucedemo.com");
-
-    }
+public class LoginTestPOM extends TestRunnerFirst {
 
     @Test
     public void testLogin() {
-        loginPage = new LoginPage(driver);
+        LoginPage loginPage = loadApplication();
         HomePage homePage = loginPage.login("standard_user", "secret_sauce");
-
-        boolean areProductsNotDisplayed = homePage.getProductNames().isEmpty();
-        Assert.assertFalse(areProductsNotDisplayed, "Test Failed: No products displayed on the Product Page.");
-
-        if (!areProductsNotDisplayed) {
-            System.out.println("Test Passed: Products are displayed on the Product Page.");
-        }
-    }
-
-
-    @AfterTest
-    public void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
+        Assert.assertNotNull(homePage, "Test failed: Wrong username or password.");
     }
 }
