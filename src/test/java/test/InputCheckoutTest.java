@@ -13,7 +13,6 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 public class InputCheckoutTest {
-
     WebDriver driver;
 
     @BeforeTest
@@ -78,7 +77,6 @@ public class InputCheckoutTest {
 
     @Test(priority = 5, dependsOnMethods = "testCheckoutWithFirstNameOnly")
     public void testCheckoutWithFirstAndLastNameOnly() {
-        WebElement firstNameInput = driver.findElement(By.id("first-name"));
         WebElement lastNameInput = driver.findElement(By.id("last-name"));
         lastNameInput.sendKeys("Doe");
 

@@ -59,7 +59,6 @@ public class AddItemsToCartTest {
         List<WebElement> cartItemsBeforeRemove = driver.findElements(By.className("cart_item"));
         Assert.assertEquals(cartItemsBeforeRemove.size(), 3, "Expected 3 items in the cart before removal.");
 
-
         List<WebElement> removeButtons = driver.findElements(By.cssSelector(".cart_button"));
         for (WebElement removeButton : removeButtons) {
             removeButton.click();

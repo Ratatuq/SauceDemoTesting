@@ -7,8 +7,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.JavascriptExecutor;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -17,7 +15,6 @@ import org.testng.annotations.AfterTest;
 import java.time.Duration;
 
 public class BurgerMenuTest {
-
     WebDriver driver;
 
     @BeforeTest
@@ -39,7 +36,6 @@ public class BurgerMenuTest {
 
         boolean isErrorDisplayed = isErrorMessageDisplayed();
         Assert.assertFalse(isErrorDisplayed, "Login failed. Incorrect username or password.");
-
 
         WebElement burgerMenuButton = driver.findElement(By.id("react-burger-menu-btn"));
         burgerMenuButton.click();
