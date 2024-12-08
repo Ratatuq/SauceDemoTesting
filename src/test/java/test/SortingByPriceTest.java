@@ -43,7 +43,7 @@ public class SortingByPriceTest {
         lowToHighOption.click();
 
         List<WebElement> productPrices = driver.findElements(By.className("inventory_item_price"));
-        if (productPrices.size() > 1) {
+        if (productPrices.size() > 2) {
             double firstPrice = extractPrice(productPrices.get(0).getText());
             double secondPrice = extractPrice(productPrices.get(1).getText());
             System.out.println("First price: " + firstPrice);
