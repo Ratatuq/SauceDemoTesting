@@ -26,7 +26,7 @@ public class OrderTestPOM extends TestRunnerFirst {
         Assert.assertEquals(checkoutItemCount, cartItemCount, "Expected 2 items on the checkout overview page.");
         checkoutPage.clickCanselButton();
 
-        homePage.goToCart();
+        homePage.clickCartButton();
         cartPage.clickCheckoutButton();
         checkoutInputPage.fillCheckoutForm("John", "Doe", "12345");
         checkoutInputPage.clickContinueButton();

@@ -32,10 +32,6 @@ public class HomePage extends TopPart {
         }
     }
 
-    public void goToCart() {
-        clickCartButton();
-    }
-
     public ProductPage clickFirstProduct() {
         firstProduct.click();
         return new ProductPage(driver);
