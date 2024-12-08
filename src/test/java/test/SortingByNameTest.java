@@ -18,6 +18,7 @@ public class SortingByNameTest {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         driver.get("https://www.saucedemo.com");
+        driver.manage().window().maximize();
     }
 
     @Test(priority = 1)
@@ -36,7 +37,7 @@ public class SortingByNameTest {
 
     @Test(priority = 2, dependsOnMethods = "testLogin")
     public void testSortProductsAlphabetically() {
-        sortProductsByName();
+        sortProducts("az");
 
         List<WebElement> productNames = driver.findElements(By.className("inventory_item_name"));
 
@@ -51,8 +52,29 @@ public class SortingByNameTest {
             }
         }
 
-        Assert.assertTrue(isSortedAlphabetically, "Test Failed: Products are not sorted alphabetically.");
-        System.out.println("Test Passed: Products are sorted alphabetically.");
+        Assert.assertTrue(isSortedAlphabetically, "Test Failed: Products are not sorted alphabetically (A to Z).");
+        System.out.println("Test Passed: Products are sorted alphabetically (A to Z).");
+    }
+
+    @Test(priority = 3, dependsOnMethods = "testLogin")
+    public void testSortProductsReverseAlphabetically() {
+        sortProducts("za");
+
+        List<WebElement> productNames = driver.findElements(By.className("inventory_item_name"));
+
+        boolean isSortedReverseAlphabetically = true;
+        for (int i = 0; i < productNames.size() - 1; i++) {
+            String currentProductName = productNames.get(i).getText();
+            String nextProductName = productNames.get(i + 1).getText();
+
+            if (currentProductName.compareTo(nextProductName) < 0) {
+                isSortedReverseAlphabetically = false;
+                break;
+            }
+        }
+
+        Assert.assertTrue(isSortedReverseAlphabetically, "Test Failed: Products are not sorted reverse alphabetically (Z to A).");
+        System.out.println("Test Passed: Products are sorted reverse alphabetically (Z to A).");
     }
 
     @AfterTest
@@ -71,10 +93,10 @@ public class SortingByNameTest {
         }
     }
 
-    private void sortProductsByName() {
+    private void sortProducts(String sortOrder) {
         WebElement sortDropdown = driver.findElement(By.className("product_sort_container"));
         sortDropdown.click();
-        WebElement alphabeticallyOption = driver.findElement(By.xpath("//option[@value='az']"));
-        alphabeticallyOption.click();
+        WebElement sortOption = driver.findElement(By.xpath("//option[@value='" + sortOrder + "']"));
+        sortOption.click();
     }
 }

@@ -19,6 +19,7 @@ public class SortingByPriceTest {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         driver.get("https://www.saucedemo.com");
+        driver.manage().window().maximize();
     }
 
     @Test(priority = 1)
@@ -36,22 +37,36 @@ public class SortingByPriceTest {
     }
 
     @Test(priority = 2, dependsOnMethods = "testLogin")
-    public void testSortProductsByPrice() {
+    public void testSortProductsByPriceLowToHigh() {
         WebElement sortDropdown = driver.findElement(By.className("product_sort_container"));
         sortDropdown.click();
         WebElement lowToHighOption = driver.findElement(By.xpath("//option[@value='lohi']"));
         lowToHighOption.click();
 
         List<WebElement> productPrices = driver.findElements(By.className("inventory_item_price"));
-        if (productPrices.size() > 2) {
-            double firstPrice = extractPrice(productPrices.get(0).getText());
-            double secondPrice = extractPrice(productPrices.get(1).getText());
-            System.out.println("First price: " + firstPrice);
-            System.out.println("Second price: " + secondPrice);
-            Assert.assertTrue(firstPrice <= secondPrice, "Test Failed: The first product price is greater than the second product price.");
-            System.out.println("Test Passed: The first product price is less than or equal to the second product price.");
-        } else {
-            Assert.fail("Test Failed: Not enough products to compare.");
+        Assert.assertTrue(productPrices.size() >= 2, "Not enough products to compare.");
+
+        for (int i = 0; i < productPrices.size() - 1; i++) {
+            double currentPrice = extractPrice(productPrices.get(i).getText());
+            double nextPrice = extractPrice(productPrices.get(i + 1).getText());
+            Assert.assertTrue(currentPrice <= nextPrice, "Products are not sorted by price low to high.");
+        }
+    }
+
+    @Test(priority = 3, dependsOnMethods = "testLogin")
+    public void testSortProductsByPriceHighToLow() {
+        WebElement sortDropdown = driver.findElement(By.className("product_sort_container"));
+        sortDropdown.click();
+        WebElement highToLowOption = driver.findElement(By.xpath("//option[@value='hilo']"));
+        highToLowOption.click();
+
+        List<WebElement> productPrices = driver.findElements(By.className("inventory_item_price"));
+        Assert.assertTrue(productPrices.size() >= 2, "Not enough products to compare.");
+
+        for (int i = 0; i < productPrices.size() - 1; i++) {
+            double currentPrice = extractPrice(productPrices.get(i).getText());
+            double nextPrice = extractPrice(productPrices.get(i + 1).getText());
+            Assert.assertTrue(currentPrice >= nextPrice, "Products are not sorted by price high to low.");
         }
     }
 
